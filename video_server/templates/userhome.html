@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        .topnav {
+            overflow: hidden;
+            background-color: #333;
+        }
+        .topnav a {
+            float: left;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            font-size: 17px;
+        }
+        .topnav a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+        .topnav a.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .topic-back {
+            text-align: center;
+            background-color: #F1F1F1;
+        }
+        #main-back {
+            background-color: #F1F1F1;
+        }
+        #title {
+            font-size: 60px;
+        }
+        * {
+            box-sizing: border-box;
+        }
+        /* Add padding to containers */
+        .container {
+            padding: 16px;
+            background-color: white;
+        }
+        /* Full-width input fields */
+        input[type=text], input[type=password] {
+            width: 100%;
+            padding: 15px;
+            margin: 5px 0 22px 0;
+            display: inline-block;
+            border: none;
+            background: #f1f1f1;
+        }
+        input[type=text]:focus, input[type=password]:focus {
+            background-color: #ddd;
+            outline: none;
+        }
+        /* Overwrite default styles of hr */
+        hr {
+            border: 1px solid #f1f1f1;
+            margin-bottom: 25px;
+        }
+        /* Set a style for the submit button */
+        .registerbtn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 16px 20px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            opacity: 0.9;
+            font-size: 20px;
+        }
+        .registerbtn:hover {
+            opacity: 1;
+        }
+        /* Add a blue text color to links */
+        a {
+            color: dodgerblue;
+        }
+        /* Set a grey background color and center the text of the "sign in" section */
+        .signin {
+            background-color: #f1f1f1;
+            text-align: center;
+        }
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            padding-top: 100px; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+        .modal-content {
+            position: relative;
+            text-align: center;
+            background-color: #fefefe;
+            margin: auto;
+            padding: 0;
+            border: 1px solid #888;
+            width: 40%;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+            -webkit-animation-name: animatetop;
+            -webkit-animation-duration: 0.4s;
+            animation-name: animatetop;
+            animation-duration: 0.4s
+        }
+        .modal-header {
+            padding: 2px 16px;
+            background-color: #5cb85c;
+            color: white;
+        }
+        .modal-body {padding: 2px 16px;}
+        .modal-footer {
+            padding: 2px 16px;
+            background-color: #5cb85c;
+            color: white;
+        }
+        .video-thumbnail-list {
+            padding-left: 50px;
+        }
+
+        .whole {
+            padding-left: 100px;
+        }
+
+        #comments {
+            padding-top: 20px;
+        }
+
+        .comment-author {
+            font-size: 12px;
+            color: grey;
+        }
+
+        .comment-ctime {
+            font-size: 12px;
+            color: gray;
+        }
+        .comment {
+            font-size: 15px;
+            color: black;
+        }
+        #comments-total {
+            font-size: 18px;
+            color: black;
+            line-height: 3;
+        }
+        #curr-video-name {
+            font-size: 18px;
+            padding-top: 10px;
+            line-height: 20px;
+        }
+        #curr-video-ctime {
+            font-size: 10px;
+            color: gray;
+        }
+
+        #snackbar {
+            visibility: hidden;
+            min-width: 250px;
+            margin-left: -125px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 2px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1;
+            left: 50%;
+            bottom: 30px;
+            font-size: 17px;
+        }
+
+        #snackbar.show{
+            visibility: visible;
+            -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+
+        #errorbar {
+            visibility: hidden;
+            min-width: 250px;
+            margin-left: -125px;
+            background-color: red;
+            color: #fff;
+            text-align: center;
+            border-radius: 2px;
+            padding: 10px;
+            position: fixed;
+            z-index: 1;
+            left: 50%;
+            bottom: 30px;
+            font-size: 17px;
+        }
+
+        #errorbar.show {
+            visibility: visible;
+            -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+    </style>
+    <script
+            src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous">
+    </script>
+    <script type="text/javascript" src="statics/scripts/home.js"></script>
+    <title>Title</title>
+</head>
+<body id="main-back">
+
+<div class="topnav">
+    <a class="active" href="#home">Home</a>
+    <a href="#news">{{.Name}}</a>
+    <a href="#about">About</a>
+    <a href="#" id="upload" data-rel="popup">Upload</a>
+    <a id="logout" href="/">Logout</a>
+</div>
+
+<div class="topic-back" style="padding-left: 16px">
+    <h2 id="title">Welcome to MOVIEDASH</h2>
+</div>
+
+<div class="whole">
+    <div id="play-box">
+        <video id="curr-video" width="640" height="400" controls preload="auto" border="5"></video>
+        <div id="curr-video-name"></div>
+        <div id="curr-video-ctime"></div>
+        <div id="snackbar">Comment submission succeeded</div>
+        <div id="errorbar">Error happened</div>
+        <div id="comments">
+            <textarea id="comments-input" name="mesage" rows="5" cols="90"\
+            placeholder="Input your comment"></textarea>
+            <input id="submit-comment" type="submit">
+            <hr size="1" style="border-color: #EDE3E1;">
+            <div id="comments-total">0 Comments</div>
+            <div id="comments-history"></div>
+        </div>
+    </div>
+
+    <div id="items" class="video-thumbnail-list"></div>
+</div>
+<div id="uploadvideomodal" class="modal">
+
+    <!--Modal content-->
+    <div class="modal-content">
+        <div class="modal-header">
+            <span class="close">&times;</span>
+            <h2>Model Header</h2>
+        </div>
+        <div class="modal-body">
+            <form id="uploadform" action="http://127.0.0.1:9000/upload/alan"
+            method="post" enctype="multipart/form-data" class="uploadform">
+                <input class="uploadform__input" type="file" name="file"
+                id="inputFile" accept="video/*">
+                <input type="text" id="vname" name="video name">
+                <input type="submit" id="upload-submit" name="submit" value="Submit">
+            </form>
+        </div>
+        <div class="modal-footer">
+            <h3>Modal Footer</h3>
+        </div>
+    </div>
+</div>
+</body>
+</html>
